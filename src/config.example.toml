@@ -8,10 +8,17 @@ dir_files_output='abs_path_dir_files_input'
 dir_img_temp='abs_path_dir_files_input'
 
 [optimize]
-min_size_file=512 # kb
-dpi=140
+min_size_file=512  # kb
+dpi=160
 jpg_quality=75
-page_heigth=1200
+page_heigth=1200  # px
+
+[edit_image]
+is_edit=0  # 1 or 0
+black_white=1  # 1 or 0
+contrast=1.5  # default = 1
+brightness=1.3  # default = 1
+
 
 [service]
 time_scan_input_dir=1

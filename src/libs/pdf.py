@@ -2,19 +2,18 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-
 import fitz
 from colorama import Fore
+from tqdm import tqdm
 
-from config import (
-    IND, JPG_QUALITY, MIN_SIZE_FILE, PATH_FILES_TEMP,
-    PATH_IMG_TEMP, PDF_DPI, logger)
+from config import (IND, JPG_QUALITY, MIN_SIZE_FILE, PATH_FILES_TEMP,
+                    PATH_IMG_TEMP, PDF_DPI, logger)
 from libs.file import (
-    create_fodler_path, delete_file_list, get_correct_file_size, get_correct_size,
+    create_fodler_path, delete_file_list,
+    get_correct_file_size, get_correct_size,
     get_path_file_output)
 from libs.image import resize_image
-from libs.utils import print_time_operation, get_percent_optimize
-from tqdm import tqdm
+from libs.utils import get_dt_now, get_percent_optimize, print_time_operation
 
 
 def get_image_list_from_pdf(file) -> int:
@@ -23,7 +22,7 @@ def get_image_list_from_pdf(file) -> int:
 
     image_list = []
 
-    for page in pdf_document:  # iterate through the pages
+    for page in tqdm(pdf_document, desc=f'{IND*2} unpack pdf'):  # iterate through the pages
         pix = page.get_pixmap(dpi=PDF_DPI)  # render page to an image
         page_file_name = f'{PATH_IMG_TEMP}/{page.number:04}.jpg'
         pix.pil_save(page_file_name, quality=JPG_QUALITY)
@@ -41,7 +40,7 @@ def make_pdf_from_image_list(pdf_file_name, img_list: list) -> int:
     try:
         pdf_doc = fitz.open()
 
-        for page_number, img in enumerate(tqdm(img_list, desc=f'{IND*2} progress')):
+        for page_number, img in enumerate(tqdm(img_list, desc=f'{IND*2} build pdf')):
 
             width, height = resize_image(img)
             pdf_doc.new_page(width=width, height=height)
@@ -68,8 +67,6 @@ def get_output_file(file: Path, file_input_size: int, file_output_size: int) -> 
 
     path_result_file = get_path_file_output(file)
     create_fodler_path(path_result_file.parent)
-
-    result = {}
 
     if file_output_size < file_input_size:
 
@@ -100,8 +97,6 @@ def get_output_file(file: Path, file_input_size: int, file_output_size: int) -> 
 
         shutil.move(file, path_result_file)
 
-        result['result'] = 0
-
 
 def optimize_file_list_recursive(path: Path) -> None:
 
@@ -122,17 +117,15 @@ def optimize_file_list_recursive(path: Path) -> None:
 
                         start = datetime.now()
 
-                        print(f'file: {path_object}')
+                        print(f'{get_dt_now()} -> {path_object}')
 
                         file_input_size = get_correct_file_size(file)
 
+                        print(f"{IND} input file: {Fore.CYAN}{file.name}")
+                        print(f"{IND*2} file size: {Fore.YELLOW}{file_input_size.correct_size} {file_input_size.unit}")
+
                         img_list = get_image_list_from_pdf(file)
-
-                        print(f"{IND} input file: {Fore.YELLOW}{file.name}")
-
-                        print(
-                            f"{IND} file size: {Fore.WHITE}| {Fore.YELLOW}{file_input_size.correct_size} {file_input_size.unit} {Fore.WHITE}| {Fore.YELLOW}pages: {len(img_list)}"
-                        )
+                        print(f"{IND*2} pages: {Fore.YELLOW}{len(img_list)}")
 
                         file_output_size = make_pdf_from_image_list(file.name, img_list)
 

@@ -8,7 +8,8 @@ from loguru import logger
 init(autoreset=True)
 
 
-ABS_PATH = Path('./src').resolve()  # windows
+ABS_PATH = Path('./src').resolve()  # debug
+# ABS_PATH = Path('.').resolve()  # build
 # ABS_PATH = sys.path[0]  # linux
 APP_NAME = 'pdf_optimize'
 
@@ -39,6 +40,12 @@ try:
     MIN_SIZE_FILE = int(config['optimize']['min_size_file'])
     PAGE_HEIGHT = int(config['optimize']['page_heigth'])
 
+    # edit image settings
+    IS_EDIT_IMG = config['edit_image']['is_edit']
+    IMG_BLACK_WHITE = config['edit_image']['black_white']
+    IMG_CONTRAST = config['edit_image']['contrast']
+    IMG_BRIGHTNESS = config['edit_image']['brightness']
+
     # settings service
     TIME_SCAN_INPUT_DIR = int(config['service']['time_scan_input_dir'])
 
@@ -56,6 +63,14 @@ try:
     print(f'{IND} dpi: {Fore.YELLOW}{PDF_DPI}')
     print(f'{IND} jpg quality: {Fore.YELLOW}{JPG_QUALITY}')
     print(f'{IND} min file size: {Fore.YELLOW}{MIN_SIZE_FILE} kb')
+    print()
+
+    if IS_EDIT_IMG:
+        print(f'{IND} edit image: ON')
+        print(f'{IND} black_white: {bool(IMG_BLACK_WHITE)}')
+        print(f'{IND} contrast: {IMG_CONTRAST}')
+        print(f'{IND} brightness: {IMG_BRIGHTNESS}')
+
     print()
 
 except Exception as e:

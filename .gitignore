@@ -31,6 +31,7 @@ src/docs/
 *.psd
 *.pdf
 *.png
+*.bat
 
 
 # config

@@ -4,6 +4,10 @@ from datetime import datetime
 from colorama import Fore
 
 
+def get_dt_now() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
 def print_time_operation(start_time, message=' > time operation:'):
     result_dt = datetime.now().timestamp() - start_time.timestamp()
     result = datetime.fromtimestamp(int(result_dt)).strftime('%M:%S')
