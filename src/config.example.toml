@@ -1,0 +1,18 @@
+[utils]
+console_indent = '...'
+
+[path]
+dir_files_input='abs_path_dir_files_input'
+dir_files_temp='abs_path_dir_files_input'
+dir_files_output='abs_path_dir_files_input'
+dir_img_temp='abs_path_dir_files_input'
+
+[optimize]
+min_size_file=512 # kb
+dpi=140
+jpg_quality=75
+page_heigth=1200
+
+[service]
+time_scan_input_dir=1
+
